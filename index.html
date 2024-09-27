@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sms Receive Online</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Online free OTP sms receive in the philippines, Temporary sms received! for free">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function copyPhoneNumber() {
+          const phoneNumber = document.getElementById('phone-number').innerText;
+          const tempInput = document.createElement('textarea');
+          tempInput.value = phoneNumber;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          
+          const feedback = document.getElementById('copy-feedback');
+          feedback.style.display = 'inline';
+          setTimeout(() => { feedback.style.display = 'none'; }, 2000);
+      }
+
+      function refreshSmsData() {
+          // Show Bootstrap spinner
+          $('#sms-container').html(`
+            <div class="d-flex justify-content-center mt-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          `);
+          
+          $.ajax({
+              url: '/refresh-sms', // Laravel route to fetch fresh SMS data
+              method: 'GET',
+              success: function (response) {
+                  // Update the card body with the new SMS data
+                  $('#sms-container').html(response.html);
+              },
+              error: function () {
+                  $('#sms-container').html('<div class="text-center mt-3 text-danger">Failed to fetch SMS data. Please try again.</div>');
+                  console.error('Failed to fetch SMS data');
+              }
+          });
+      }
+  </script>
+</head>
+    <body>
+        <div class="container-fluid p-3 bg-primary text-white text-center">
+            <h1>Temporary online verification</h1>
+            <p>for trial yos bango</p>
+        </div>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card" style="max-height: 500px; max-width: 500px; width: 100%; overflow-y: auto;">
+                        <div class="card-header d-flex align-items-center sticky-top" style="z-index: 1000; background-color: white;">
+                            <span id="phone-number">+639361953750</span>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" title="Copy" onclick="copyPhoneNumber()">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <span id="copy-feedback" style="display: none; color: green; margin-left: 10px;">Copied!</span>
+                            <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="refreshSmsData()">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                    </div>
+                    <!-- SMS Content will be dynamically updated here -->
+                     <div id="sms-container"></div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
